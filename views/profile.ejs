@@ -1,0 +1,23 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Profile Page</title>
+</head>
+
+<body>
+    <%- include('Header') %>
+    <h1>Profile Page</h1>
+    <h1>Welcome <% if (user) { %> <%= user.name %> <% } else { %> Guest <% } %>!</h1>
+    
+
+    <h2>Email: <% if (user && user.email) { %> <%= user.email %> <% } else { %> N/A <% } %></h2>
+
+    <ul>
+        <% if (user && user.city && user.city.length) { %>
+            <% user.city.forEach((item) => { %>
+                <li><%= item %></li>
+            <% }); %>
+        <% } %>
+    </ul>
+    <p><a href="/">Go back to Home</a></p>
+</html>
