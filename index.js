@@ -5,6 +5,7 @@ const db = require('./config/db'); // Database connection
 const bodyParser = require('body-parser');
 const apiRoutes = require('./routes/api'); // API routes
 const path = require('path'); // For serving static files and views
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -13,14 +14,17 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Middleware
-// app.use(bodyParser.json()); // Parse JSON request bodies
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.use(cookieParser());
 
 app.use((req, res, next) => {
   req.db = db;
   next();
 }); 
 // Route setup  
-app.use('/api', apiRoutes);
+app.use('/', apiRoutes);
 
 // 404 Handler
 app.use((req, res) => {

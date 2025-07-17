@@ -18,11 +18,6 @@ const connection = mysql.createConnection({
   database: 'sql12789993',    // your DB name
   port: 3306,                 // your DB port
 });
-// Host: sql12.freesqldatabase.com
-// Database name: sql12789993
-// Database user: sql12789993
-// Database password: KSl8cBGQyJ
-// Port number: 3306
 
 connection.connect((err) => {
   if (err) {

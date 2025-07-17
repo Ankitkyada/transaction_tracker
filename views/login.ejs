@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Green & Black</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background-color: #121212;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-container {
+      background-color: #1e1e1e;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #00ff88;
+    }
+
+    label {
+      color: #ccc;
+      font-weight: 500;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #00ff88;
+      background-color: #1a1a1a;
+      color: white;
+      font-size: 16px;
+      transition: border 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: #00cc66;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #00ff88;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #00cc66;
+    }
+
+    .error {
+      color: #ff4d4d;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <h2>Login</h2>
+
+    <% if (error) { %>
+    <div class="error"><%= error %></div>
+    <% } %>
+
+    <form action="/login" method="POST">
+      <label for="name">Name</label>
+      <input type="text" name="name" id="name" placeholder="Enter your name" required>
+
+      <label for="pin">PIN</label>
+      <input type="password" name="pin" id="pin" placeholder="Enter your PIN" maxlength="4" required>
+
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</body>
+
+</html>
