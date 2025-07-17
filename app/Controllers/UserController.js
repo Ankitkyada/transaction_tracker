@@ -60,9 +60,10 @@ class UserController {
     }
 
     static getTransactionById(req, res) {
-        const userId = req.params.id;   
-        const query = 'SELECT * FROM tranction_history WHERE user_id = ?';
-        db.query(query, [userId], (err, results) => {
+        const userId = req.params.id; 
+
+        const query = 'SELECT * FROM tranction_history WHERE paid_user_id = ? OR participant_user_id = ?';
+        db.query(query, [userId, userId], (err, results) => {
             if (err) {
                 console.error('Error fetching transactions:', err);
                 return res.status(500).json({ message: 'Database error' });
