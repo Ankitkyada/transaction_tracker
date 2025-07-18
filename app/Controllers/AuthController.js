@@ -34,6 +34,11 @@ class AuthController {
                         httpOnly: true,
                         maxAge: 3600000 // 1 hour
                     });
+                    res.cookie('user_id', result[0].id, {
+                        httpOnly: true,
+                        maxAge: 3600000 // 1 hour
+                    });
+                    
                     const query = 'SELECT * FROM users WHERE name != ?';
                     
                     db.query(query, [name], (err, results) => {

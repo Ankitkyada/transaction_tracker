@@ -2,105 +2,134 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Transaction List</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
         body {
             background-color: #121212;
-            color: white;
+            color: #ffffff;
             font-family: 'Segoe UI', sans-serif;
-            padding: 10px;
+            padding: 20px;
         }
 
         h1 {
             color: #00ff88;
             font-size: 1.2rem;
+            margin-bottom: 20px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 0.95rem;
+        .transaction-card {
+            background-color: #1a1a1a;
+            border-left: 4px solid #00ff88;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0, 255, 136, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            min-height: 40px;
         }
 
-        th,
-        td {
-            padding: 8px;
-            border: 1px solid #00ff88;
-            text-align: left;
+        .transaction-details span {
+            margin: 2px 0;
+            font-size: 13px;
+            line-height: 1.2;
         }
 
-        th {
-            background-color: #1e1e1e;
+        .transaction-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .transaction-details span {
+            margin: 2px 0;
+        }
+
+        .transaction-label {
+            font-weight: bold;
+            color: #00ff88;
+            margin-right: 5px;
+        }
+
+        .amount {
+            font-weight: bold;
+            font-size: 1rem;
+            font-size: 14px;
+            color: #00ff88;
+        }
+
+        .no-data {
+            color: #999;
+            font-style: italic;
+        }
+
+        .floating-btn {
+            position: fixed;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            color: #121212;
+            background-color: #00ff88;
+            box-shadow: 0 2px 8px rgba(0, 255, 136, 0.4);
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.2s ease;
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-edit {
+            bottom: 20px;
+            left: 20px;
+        }
+
+        .btn-add {
+            top: 20px;
+            right: 20px;
         }
 
         @media (max-width: 600px) {
-            table, thead, tbody, th, td, tr {
-                display: block;
-                width: 100%;
-            }
-            thead {
-                display: none;
-            }
-            tr {
-                margin-bottom: 15px;
-                background: #1e1e1e;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            }
-            td {
-                border: none;
+            .transaction-card {
                 position: relative;
-                padding-left: 50%;
-                min-height: 40px;
+                padding-top: 25px;
             }
-            td:before {
+
+            .amount {
                 position: absolute;
-                left: 10px;
-                top: 8px;
-                width: 45%;
-                white-space: nowrap;
-                font-weight: bold;
-                color: #00ff88;
+                top: 6px;
+                right: 12px;
+                color: #ff4d4d;
+                font-size: 14px;
+                /* Red */
             }
-            td:nth-of-type(1):before { content: "Paid By"; }
-            td:nth-of-type(2):before { content: "Paid For"; }
-            td:nth-of-type(3):before { content: "Amount"; }
-            td:nth-of-type(4):before { content: "Description"; }
-            td:nth-of-type(5):before { content: "Date"; }
         }
     </style>
 </head>
 
 <body>
     <h1>Transactions for User Name: <%= userId %></h1>
+    <button class="floating-btn btn-add" onclick="window.location.href='/transactions/add'">Add</button>
     <% if (transactions.length > 0) { %>
-    <table>
-        <thead>
-            <tr>
-                <th>Paid By</th>
-                <th>Paid For</th>
-                <th>Amount</th>
-                <th>Description</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% transactions.forEach(t => { %>
-            <tr>
-                <td><%= t.pay_user_name %></td>
-                <td><%= t.participants %></td>
-                <td>₹<%= t.amount %></td>
-                <td><%= t.description %></td>
-                <td><%= new Date(t.created_at).toLocaleString() %></td>
-            </tr>
-            <% }) %>
-        </tbody>
-    </table>
+    <% transactions.forEach(t => { %>
+    <div class="transaction-card">
+        <div class="transaction-details">
+            <span><span class="transaction-label" style="color:#00ff88;">Paid By:</span> <%= t.paid_user_name %></span>
+            <span><span class="transaction-label" style="color: #ff4444;">Paid For:</span> <%= t.participants %></span>
+            <span><span class="transaction-label" style="color:#00ff88;">Description:</span> <%= t.description %></span>
+            <span><span class="transaction-label" style="color:#00ff88;">Date:</span>
+                <%= new Date(t.created_at).toLocaleString() %></span>
+        </div>
+        <div class="amount">₹<%= Number(t.amount).toFixed(2) %></div>
+    </div>
+    <% }) %>
     <% } else { %>
-    <p>No transactions found for this user.</p>
+    <p class="no-data">No transactions found for this user.</p>
     <% } %>
 </body>
 

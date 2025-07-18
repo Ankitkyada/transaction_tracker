@@ -58,22 +58,7 @@ class UserController {
             return commonResponse(201, true, 'User added successfully', { id: results.insertId }, null, res);
         });
     }
-
-    static getTransactionById(req, res) {
-        const userId = req.params.id; 
-
-        const query = 'SELECT * FROM tranction_history WHERE paid_user_id = ? OR participant_user_id = ?';
-        db.query(query, [userId, userId], (err, results) => {
-            if (err) {
-                console.error('Error fetching transactions:', err);
-                return res.status(500).json({ message: 'Database error' });
-            }
-            if (results.length === 0) {
-                return res.status(404).json({ message: 'No transactions found for this user' });
-            }
-            res.render('transaction-list.ejs', { transactions: results, userId: userId });
-        });
-    }   
+ 
 }
 
 
