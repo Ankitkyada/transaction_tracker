@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Transaction</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: #111;
+            color: #d4ffd4;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: #181f18;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 255, 0, 0.08);
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #7fff7f;
+        }
+
+        h4 {
+            color: #00ff00;
+        }
+
+        .form-control,
+        .form-select {
+            background: #222;
+            color: #d4ffd4;
+            border: 1px solid #00ff00;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #39ff14;
+            box-shadow: 0 0 0 0.2rem rgba(0, 255, 0, .25);
+        }
+
+        .btn-primary {
+            background: #00ff00;
+            border: none;
+            color: #111;
+        }
+
+        .btn-primary:hover {
+            background: #39ff14;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h4 class="mb-4">Edit Transaction</h4>
+        <form action="/transactions/edit/<%= transaction.id %>" method="POST">
+            <div class="mb-3">
+                <label class="form-label">Paid By</label>
+                <select class="form-select" name="paid_user_id" required>
+                    <% users.forEach(user => { %>
+                    <option value="<%= user.id %>" <%= user.id === transaction.paid_user_id ? 'selected' : '' %>>
+                        <%= user.name %>
+                    </option>
+                    <% }); %>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Paid For</label>
+                <select class="form-select" name="participant_user_id" required>
+                    <% users.forEach(user => { %>
+                    <option value="<%= user.id %>" <%= user.id === transaction.participant_user_id ? 'selected' : '' %>>
+                        <%= user.name %>
+                    </option>
+                    <% }); %>
+                </select>
+            </div>
+
+            <%
+                let formattedDate = '';
+                if (transaction.transaction_date) {
+                    try {
+                        formattedDate = new Date(transaction.transaction_date).toISOString().slice(0, 10);
+                    } catch (e) {
+                        formattedDate = '';
+                    }
+                }
+            %>
+            <input type="date" class="form-control" name="transaction_date" value="<%= formattedDate %>" required>
+
+
+            <div class="mb-3">
+                <label class="form-label">Amount</label>
+                <input type="number" step="0.01" class="form-control" name="amount" value="<%= transaction.amount %>"
+                    required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Comment</label>
+                <textarea class="form-control" name="description" rows="3"><%= transaction.description %></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">Update Transaction</button>
+        </form>
+    </div>
+</body>
+
+</html>

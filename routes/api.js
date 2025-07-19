@@ -31,6 +31,9 @@ router.get('/audit_logs', AuditLogsController.getAuditLogs);
 
 router.get('/transactions/add', TransactionController.getLoginUser);
 router.post('/add-transaction', TransactionController.addTransaction);
-router.get('/transaction-list/:id', TransactionController.getTransactionById);
+router.get('/transaction-list/:id', TransactionController.getTransactionList);
+router.get('/transactions/edit/:id', TransactionController.getById);
+router.post('/transactions/edit/:id', TransactionController.updateTransaction);
+router.delete('/transactions/delete/:id', TransactionController.deleteTransaction);
 
 module.exports = router;

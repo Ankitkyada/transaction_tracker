@@ -6,7 +6,7 @@ const commonResponse = require('../../config/CommonResponse'); // adjust path as
 class TransactionController {
 
     static addTransaction(req, res) {
-        const { paid_user_id, participant_user_id, amount,transaction_date, description } = req.body;
+        const { paid_user_id, participant_user_id, amount, transaction_date, description } = req.body;
 
         if (!paid_user_id || !participant_user_id || !amount || !transaction_date) {
             return res.status(400).json({ message: 'Missing required fields' });
@@ -57,19 +57,15 @@ class TransactionController {
                         console.error('Error inserting transaction:', err);
                         return res.status(500).json({ message: 'Somthing went wrong' });
                     }
-
-                    res.status(201).json({
-                        message: 'Transaction added successfully',
-                        transactionId: result.insertId
-                    });
+                    return res.redirect(`/transaction-list/${paid_user_id}`);
                 });
             });
         });
     }
 
-    static getTransactionById(req, res) {
+    static getTransactionList(req, res) {
         const userId = req.params.id;
-        res.cookie('participant_user_id', userId, { httpOnly: true });
+        res.cookie('participant_user_id', userId, { httpOnly: true })
 
         const query = 'SELECT * FROM transaction_history WHERE paid_user_id = ? OR participant_user_id = ?';
         db.query(query, [userId, userId], (err, results) => {
@@ -78,9 +74,9 @@ class TransactionController {
                 return res.status(500).json({ message: 'Database error' });
             }
             if (results.length === 0) {
-                return res.status(404).json({ message: 'No transactions found for this user' });
+                res.render('transaction-list.ejs', { transactions:  [], userId: userId });
             }
-            res.render('transaction-list.ejs', { transactions: results, userId: userId });
+            res.render('transaction-list.ejs', { transactions: results ?? [], userId: userId });
         });
     }
 
@@ -109,6 +105,86 @@ class TransactionController {
                 users: results, user_id,
                 participant_user_id, error: null
             });
+        });
+    }
+    static getById(req, res) {
+        const transactionId = req.params.id;
+
+        const transactionQuery = 'SELECT * FROM transaction_history WHERE id = ?';
+        const usersQuery = 'SELECT id, name FROM users';
+
+        db.query(transactionQuery, [transactionId], (err, transactionResults) => {
+            if (err) {
+                console.error('Error fetching transaction:', err);
+                return res.status(500).json({ message: 'Database error' });
+            }
+
+            if (transactionResults.length === 0) {
+                return res.status(404).json({ message: 'Transaction not found' });
+            }
+
+            const transaction = transactionResults[0];
+
+            db.query(usersQuery, (userErr, userResults) => {
+                if (userErr) {
+                    console.error('Error fetching users:', userErr);
+                    return res.status(500).json({ message: 'User query failed' });
+                }
+
+                res.render('edit-transaction.ejs', {
+                    transaction,
+                    users: userResults,
+                    error: null,
+                    success: null
+                });
+            });
+        });
+    }
+
+    static updateTransaction(req, res) {
+        const transactionId = req.params.id;
+        const { paid_user_id, participant_user_id, amount, transaction_date, description } = req.body;
+
+        if (!paid_user_id || !participant_user_id || !amount || !transaction_date) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        const updateQuery = `UPDATE transaction_history 
+            SET paid_user_id = ?, participant_user_id = ?, amount = ?, transaction_date = ?, description = ?
+            WHERE id = ?`;
+
+        db.query(updateQuery, [
+            paid_user_id,
+            participant_user_id,
+            amount,
+            transaction_date,
+            description || '',
+            transactionId
+        ], (err, result) => {
+            if (err) {
+                console.error('Error updating transaction:', err);
+                return res.status(500).json({ message: 'Database error' });
+            }
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Transaction not found' });
+            }
+            return res.redirect(`/transaction-list/${paid_user_id}`);
+        });
+    }
+
+    static deleteTransaction(req, res) {
+        const transactionId = req.params.id;
+
+        const deleteQuery = 'DELETE FROM transaction_history WHERE id = ?';
+
+        db.query(deleteQuery, [transactionId], (err, result) => {
+            if (err) {
+                res.render('transaction-list.ejs', { error: 'Error deleting transaction' });
+            }
+            if (result.affectedRows === 0) {
+                res.render('transaction-list.ejs', { error: 'Transaction not found' });
+            }
+            res.render('transaction-list.ejs', { message: 'Transaction deleted successfully' });
         });
     }
 }
