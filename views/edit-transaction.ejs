@@ -104,6 +104,23 @@
                 <label class="form-label">Comment</label>
                 <textarea class="form-control" name="description" rows="3"><%= transaction.description %></textarea>
             </div>
+            <div class="mb-3">
+                <label class="form-label">Category</label>
+                 <select class="form-select" name="category" required>
+                    <option value="" disabled selected>Select category</option>
+                    <option value="Breakfast-Tea">Breakfast-Tea</option>
+                    <option value="Lunch">Lunch</option>
+                    <option value="Dinner">Dinner</option>
+                    <option value="Vegetables">Vegetables</option>
+                    <option value="House-Rent">House-Rent</option>
+                    <option value="Water-Bills">Water-Bills</option>
+                    <option value="Petrol">Petrol</option>
+                    <option value="Mavo">Mavo</option>
+                    <option value="Emergency-Payment">Emergency-Payment</option>
+                    <option value="Advance-Payments">Advance-Payments</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
 
             <button type="submit" class="btn btn-success w-100">Update Transaction</button>
         </form>

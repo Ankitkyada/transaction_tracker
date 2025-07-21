@@ -66,8 +66,17 @@
             font-style: italic;
         }
 
-        .floating-btn {
+        .button-wrapper {
             position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+
+        .floating-btn {
             padding: 10px 18px;
             border: none;
             border-radius: 25px;
@@ -78,6 +87,14 @@
             cursor: pointer;
             z-index: 1000;
             transition: transform 0.2s ease;
+        }
+
+        .btn-back {
+            border-radius: 25px;
+            padding: 10px 18px;
+            font-weight: bold;
+            background-color: #00ff88;
+            color: #121212;
         }
 
         .card-right {
@@ -145,30 +162,47 @@
 </head>
 
 <body>
-    <h1>Transactions for User Name: <%= userId %></h1>
-    <button class="floating-btn btn-add" onclick="window.location.href='/transactions/add'">Add</button>
-    <% if (transactions.length > 0) { %>
-    <% transactions.forEach(t => { %>
-    <div class="transaction-card">
-        <div class="transaction-details">
-            <span><span class="transaction-label" style="color:#00ff88;">Paid By:</span> <%= t.paid_user_name %></span>
-            <span><span class="transaction-label" style="color: #ff4444;">Paid For:</span> <%= t.participants %></span>
-            <span><span class="transaction-label" style="color:#00ff88;">Description:</span> <%= t.description %></span>
-            <span><span class="transaction-label" style="color:#00ff88;">Date:</span>
-                <%= new Date(t.created_at).toLocaleString() %></span>
+    <h1>Transactions for User Name: <%= paidUserName %> -> <%= participantUserName %></h1>
+    <p><strong><%= paidUserName %></strong>: ₹<%= Number(paidTotal).toFixed(2) %></p>
+    <p><strong><%= participantUserName %></strong>: ₹<%= Number(participatedTotal).toFixed(2) %></p>
+    <p>Balance: ₹<%= Number(balance).toFixed(2) %></p>
+    
+        <div class="button-wrapper">
+            <button class="floating-btn btn-add" onclick="window.location.href='/transactions/add'">Add</button>
+            <button onclick="history.back()" class="btn-back">Back</button>
         </div>
-        <div class="card-right">
-            <div class="amount">₹<%= Number(t.amount).toFixed(2) %></div>
-            <div class="card-actions">
-                <button onclick="window.location.href='/transactions/edit/<%= t.id %>'" class="btn-edit">✏️</button>
-                <button onclick="confirmDelete('<%= t.id %>')" class="btn-delete">🗑️</button>
+        <% if (transactions.length > 0) { %>
+        <% transactions.forEach(t => { %>
+        <div class="transaction-card">
+            <div class="transaction-details">
+                <span><span class="transaction-label" style="color:#00ff88;">Paid By:</span>
+                    <%= t.paid_user_name %></span>
+                <span><span class="transaction-label" style="color: #ff4444;">Paid For:</span>
+                    <%= t.participants %></span>
+                <span><span class="transaction-label" style="color:#00ff88;">Category:</span> <%= t.category %></span>
+                <span><span class="transaction-label" style="color:#00ff88;">Description:</span>
+                    <%= t.description %></span>
+                <span><span class="transaction-label" style="color:#00ff88;">Created By:</span>
+                    <%= t.created_by_name  %></span>
+                <span><span class="transaction-label" style="color:#00ff88;">Date:</span>
+                    <%= new Date(t.created_at).toLocaleString() %></span>
+            </div>
+            <div class="card-right">
+                <div class="amount" style="color: #ff4444;">₹<%= Number(t.amount).toFixed(2) %></div>
+                <div class="card-actions">
+                    <% if (Number(t.created_by) === Number(authUserId)) { %>
+                    <button onclick="window.location.href='/transactions/edit/<%= t.id %>'" class="btn-edit">✏️</button>
+                    <button onclick="confirmDelete('<%= t.id %>')" class="btn-delete">🗑️</button>
+                    <% } else { %>
+                    <span class="text-muted"></span>
+                    <span class="text-muted"></span>
+                    <% } %>
+
+                </div>
             </div>
         </div>
-    </div>
-    <% }) %>
-    <% } else { %>
-    <p class="no-data">No transactions found for this user.</p>
-    <% } %>
+        <% }) %>
+        <% } %>
 </body>
 
 <script>
@@ -180,4 +214,5 @@
         }
     }
 </script>
+
 </html>
