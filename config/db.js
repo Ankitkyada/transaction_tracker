@@ -12,9 +12,9 @@ const mysql = require('mysql2');
 // });
 
 //const connection = mysql.createConnection({
-  //host: 'db4free.net', // your DB host
-  //user: 'alienarmpit',          // your DB username
- // password: 'alienarmpit@354',      // your DB password
+  //host: '', // your DB host
+  //user: '',          // your DB username
+ // password: '',      // your DB password
   //database: 'khatabook',    // your DB name
   //port: 3306,                 // your DB port
 //});
