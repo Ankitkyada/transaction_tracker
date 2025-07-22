@@ -11,13 +11,13 @@ const mysql = require('mysql2');
 //   database: 'new_laravel', // your DB name
 // });
 
-//const connection = mysql.createConnection({
-  //host: '', // your DB host
-  //user: '',          // your DB username
- // password: '',      // your DB password
-  //database: 'khatabook',    // your DB name
-  //port: 3306,                 // your DB port
-//});
+const connection = mysql.createConnection({
+  host: 'db4free.net', // your DB host
+  user: 'alienarmpit',          // your DB username
+  password: 'alienarmpit@354',      // your DB password
+  database: 'khatabook',    // your DB name
+  port: 3306,                 // your DB port
+});
 
 connection.connect((err) => {
   if (err) {

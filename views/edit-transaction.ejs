@@ -13,6 +13,7 @@
         }
 
         .container {
+            position: relative;
             max-width: 500px;
             margin: 50px auto;
             background: #181f18;
@@ -24,6 +25,20 @@
         .form-label {
             font-weight: 500;
             color: #7fff7f;
+        }
+
+        .top-right {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .btn-back {
+            border-radius: 25px;
+            padding: 3px 12px;
+            font-weight: bold;
+            background-color: #00ff88;
+            color: #121212;
         }
 
         h4 {
@@ -58,6 +73,7 @@
 <body>
     <div class="container">
         <h4 class="mb-4">Edit Transaction</h4>
+        <button onclick="history.back()" class="btn-back top-right">Back</button>
         <form action="/transactions/edit/<%= transaction.id %>" method="POST">
             <div class="mb-3">
                 <label class="form-label">Paid By</label>
@@ -106,7 +122,7 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Category</label>
-                 <select class="form-select" name="category" required>
+                <select class="form-select" name="category" required>
                     <option value="" disabled selected>Select category</option>
                     <option value="Breakfast-Tea">Breakfast-Tea</option>
                     <option value="Lunch">Lunch</option>
